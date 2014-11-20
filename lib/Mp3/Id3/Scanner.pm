@@ -5,12 +5,25 @@ use Image::ExifTool::ID3;
 use Mp3::Id3::Scanner::ID3v1;
 use Mp3::Id3::Scanner::ID3v2;
 
-has [qw|id3v1 id3v2|] => ( is => "rw" );
+has [qw|
+    id3v1 
+    id3v2
+    duration
+    audio_bitrate
+    audio_layer
+    channel_mode
+    size
+    type
+    mime_type
+|] => ( is => "rw" );
 
 before 'scan' => sub {
     my $self = shift;
     $self->id3v1(Mp3::Id3::Scanner::ID3v1->new);
     $self->id3v2(Mp3::Id3::Scanner::ID3v2->new);
+    for (qw|duration audio_bitrate audio_layer channel_mode size type mime_type|) {
+        $self->$_(undef);
+    }
 };
 
 sub scan {
@@ -23,6 +36,15 @@ sub scan {
     # todo add option for file handler and strng
     $self->id3v1->parse_id3v1( $info );
     $self->id3v2->parse_id3v2( $info );
+
+    $self->duration($info->{ Duration }) if exists $info->{ Duration };
+    $self->audio_bitrate($info->{ AudioBitrate }) if exists $info->{ AudioBitrate };
+    $self->audio_layer($info->{ AudioLayer }) if exists $info->{ AudioLayer };
+    $self->channel_mode($info->{ ChannelMode }) if exists $info->{ ChannelMode };
+    $self->size($info->{ FileSize }) if exists $info->{ FileSize };
+    $self->type($info->{ FileType }) if exists $info->{ FileType };
+    $self->mime_type($info->{ MIMEType }) if exists $info->{ MIMEType };
+
     $self;
 }
 

@@ -29,5 +29,13 @@ is( $mp3->id3v2->url        , 'Url id3v2', '' );
 is( $mp3->id3v2->encoded    , 'Encoded id3v2', '' );
 is( $mp3->id3v2->bpm        , '123', '' );
 
+is( $mp3->duration          , '0.31 s (approx)', '');
+is( $mp3->audio_bitrate     , '128 kbps', '');
+is( $mp3->audio_layer       , '3', '');
+is( $mp3->channel_mode      , 'Single Channel', '');
+is( $mp3->size              , '7.0 kB', '');
+is( $mp3->type              , 'MP3', '');
+is( $mp3->mime_type         , 'audio/mpeg', '');
+
 #more tests needed
 done_testing;
